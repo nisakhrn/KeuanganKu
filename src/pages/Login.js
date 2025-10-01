@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom"; // untuk navigasi ke register
 import "../styles/login.css"; // pastikan path sesuai
 
 export default function Login() {
@@ -26,7 +27,7 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // penting kalau backend pakai session/cookie
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
@@ -34,12 +35,9 @@ export default function Login() {
         const data = await response.json();
         setSuccess("Login berhasil!");
         setErrors({});
-        // Simpan token / data user kalau backend kasih JWT atau session
         localStorage.setItem("token", data.token || "");
         localStorage.setItem("user", JSON.stringify(data.user || {}));
-
-        // redirect ke dashboard misalnya
-        window.location.href = "/dashboard";
+        window.location.href = "/dashboard"; // redirect
       } else {
         const data = await response.json();
         setErrors(data.errors || { general: "Email atau password salah" });
@@ -56,23 +54,30 @@ export default function Login() {
       "div",
       { className: "login-card" },
       [
+        // Title
         React.createElement(
           "h2",
           { key: "title", className: "login-title" },
           "Login"
         ),
+
+        // Success message
         success &&
           React.createElement(
             "p",
             { key: "success", className: "login-success" },
             success
           ),
+
+        // Error general
         errors.general &&
           React.createElement(
             "p",
             { key: "errorGeneral", className: "login-error" },
             errors.general
           ),
+
+        // Form
         React.createElement(
           "form",
           { key: "form", onSubmit: handleSubmit, className: "login-form" },
@@ -123,6 +128,20 @@ export default function Login() {
               { key: "submit", type: "submit", className: "btn-login" },
               "Login"
             ),
+
+            // Link to Register
+            React.createElement(
+              "p",
+              { key: "registerText", className: "login-register" },
+              [
+                "Belum punya akun? ",
+                React.createElement(
+                  Link,
+                  { to: "/register", key: "registerLink", className: "register-link" },
+                  "Register"
+                )
+              ]
+            )
           ]
         ),
       ]
