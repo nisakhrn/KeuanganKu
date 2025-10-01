@@ -1,12 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// import halaman
+import Landing from "./components/Landing";
+import Register from "./pages/Register";
 
 function App() {
   return (
-    <div>
-      <h1>Halo, KeuanganKu 🚀</h1>
-      <p>React sudah jalan!</p>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
 }
 
