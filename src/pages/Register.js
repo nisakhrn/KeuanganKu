@@ -20,34 +20,46 @@ export default function Register() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  // 🔹 FIX BAGIAN INI: dari fetch → jadi localStorage
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("http://localhost:8000/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+    setErrors({});
+    setSuccess("");
 
-      if (response.ok) {
-        setSuccess("Registrasi berhasil!");
-        setErrors({});
-        setFormData({
-          name: "",
-          email: "",
-          password: "",
-          password_confirmation: "",
-        });
-      } else {
-        const data = await response.json();
-        setErrors(data.errors || { general: "Terjadi kesalahan" });
-      }
-    } catch (err) {
-      setErrors({ general: "Gagal terhubung ke server" });
+    // validasi password
+    if (formData.password !== formData.password_confirmation) {
+      setErrors({ password_confirmation: "Password tidak sama" });
+      return;
     }
+
+    // ambil data user lama dari localStorage
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // cek email sudah terdaftar
+    const exists = users.find((u) => u.email === formData.email);
+    if (exists) {
+      setErrors({ email: "Email sudah terdaftar" });
+      return;
+    }
+
+    // simpan user baru
+    const newUser = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+    };
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    // reset form
+    setSuccess("Registrasi berhasil! Silakan login.");
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+    });
   };
 
   return React.createElement(
@@ -170,6 +182,12 @@ export default function Register() {
                   { className: "form-label" },
                   "Confirm Password"
                 ),
+                errors.password_confirmation &&
+                  React.createElement(
+                    "p",
+                    { className: "register-error" },
+                    errors.password_confirmation
+                  ),
               ]),
 
               // Submit Button
