@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import "../styles/login.css";
 
 export default function Login() {
@@ -18,6 +18,7 @@ export default function Login() {
     });
   };
 
+  // Perhatikan penambahan "async" di sini
   const handleSubmit = async (e) => {
     e.preventDefault();
 
