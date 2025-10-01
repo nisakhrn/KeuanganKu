@@ -9,7 +9,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState({
     totalBalance: 0,
     monthlyIncome: 0,
-    monthlyExpense: 0
+    monthlyExpense: 0,
   });
 
   useEffect(() => {
@@ -20,7 +20,8 @@ export default function Dashboard() {
     }
     setCurrentUser(user);
 
-    const allTransactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    const key = `transactions_${user.email}`;
+    const allTransactions = JSON.parse(localStorage.getItem(key)) || [];
     setTransactions(allTransactions);
     calculateStats(allTransactions);
   }, []);
@@ -47,7 +48,7 @@ export default function Dashboard() {
     setStats({
       totalBalance: income - expense,
       monthlyIncome: income,
-      monthlyExpense: expense
+      monthlyExpense: expense,
     });
   };
 
@@ -55,7 +56,7 @@ export default function Dashboard() {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(number);
   };
 
@@ -66,364 +67,111 @@ export default function Dashboard() {
 
   if (!currentUser) return null;
 
-  return React.createElement(
-    "div",
-    { className: "dashboard-layout" },
-    [
-      React.createElement(Sidebar, { key: "sidebar" }),
+  return (
+    <div className="dashboard-layout">
+      <Sidebar />
 
-      React.createElement(
-        "div",
-        { key: "main", className: "dashboard-main" },
-        [
-          // Header
-          React.createElement(
-            "header",
-            { key: "header", className: "dashboard-header" },
-            [
-              React.createElement(
-                "h1",
-                { key: "title", className: "dashboard-title" },
-                "Dashboard"
-              ),
-              React.createElement(
-                "div",
-                { key: "user-info", className: "user-info" },
-                [
-                  React.createElement(
-                    "span",
-                    { key: "notif", className: "notification-icon" },
-                    [
-                      React.createElement("i", {
-                        key: "bell",
-                        className: "fas fa-bell"
-                      }),
-                      React.createElement("span", {
-                        key: "badge",
-                        className: "notification-badge"
-                      })
-                    ]
-                  ),
-                  React.createElement(
-                    "span",
-                    { key: "name", className: "user-name" },
-                    currentUser.name
-                  ),
-                  React.createElement(
-                    "button",
-                    {
-                      key: "logout",
-                      onClick: handleLogout,
-                      className: "logout-btn",
-                      title: "Keluar"
-                    },
-                    React.createElement("i", { className: "fas fa-sign-out-alt" })
-                  )
-                ]
-              )
-            ]
-          ),
+      <div className="dashboard-main">
+        {/* Header */}
+        <header className="dashboard-header">
+          <h1 className="dashboard-title">Dashboard</h1>
+          <div className="user-info">
+            <span className="notification-icon">
+              <i className="fas fa-bell"></i>
+              <span className="notification-badge"></span>
+            </span>
+            <span className="user-name">{currentUser.name}</span>
+            <button onClick={handleLogout} className="logout-btn" title="Keluar">
+              <i className="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </header>
 
-          // Content
-          React.createElement(
-            "div",
-            { key: "content", className: "dashboard-content" },
-            [
-              // Stats Cards
-              React.createElement(
-                "div",
-                { key: "stats", className: "stats-grid" },
-                [
-                  // Saldo Total
-                  React.createElement(
-                    "div",
-                    { key: "balance", className: "stat-card" },
-                    [
-                      React.createElement(
-                        "div",
-                        { key: "header", className: "stat-header" },
-                        [
-                          React.createElement(
-                            "span",
-                            { key: "label", className: "stat-label" },
-                            "Saldo Total"
-                          ),
-                          React.createElement(
-                            "div",
-                            { key: "icon", className: "stat-icon purple" },
-                            React.createElement("i", { className: "fas fa-wallet" })
-                          )
-                        ]
-                      ),
-                      React.createElement(
-                        "div",
-                        { key: "value", className: "stat-value" },
-                        formatRupiah(stats.totalBalance)
-                      ),
-                      React.createElement(
-                        "div",
-                        { key: "change", className: "stat-change positive" },
-                        [
-                          React.createElement("i", {
-                            key: "arrow",
-                            className: "fas fa-arrow-up"
-                          }),
-                          " 0% dari bulan lalu"
-                        ]
-                      )
-                    ]
-                  ),
+        {/* Content */}
+        <div className="dashboard-content">
+          {/* Stats */}
+          <div className="stats-grid">
+            {/* Saldo Total */}
+            <div className="stat-card">
+              <div className="stat-header">
+                <span className="stat-label">Saldo Total</span>
+                <div className="stat-icon purple">
+                  <i className="fas fa-wallet"></i>
+                </div>
+              </div>
+              <div className="stat-value">{formatRupiah(stats.totalBalance)}</div>
+            </div>
 
-                  // Pemasukan
-                  React.createElement(
-                    "div",
-                    { key: "income", className: "stat-card" },
-                    [
-                      React.createElement(
-                        "div",
-                        { key: "header", className: "stat-header" },
-                        [
-                          React.createElement(
-                            "span",
-                            { key: "label", className: "stat-label" },
-                            "Pemasukan Bulan Ini"
-                          ),
-                          React.createElement(
-                            "div",
-                            { key: "icon", className: "stat-icon green" },
-                            React.createElement("i", { className: "fas fa-arrow-down" })
-                          )
-                        ]
-                      ),
-                      React.createElement(
-                        "div",
-                        { key: "value", className: "stat-value" },
-                        formatRupiah(stats.monthlyIncome)
-                      ),
-                      React.createElement(
-                        "div",
-                        { key: "change", className: "stat-change positive" },
-                        [
-                          React.createElement("i", {
-                            key: "arrow",
-                            className: "fas fa-arrow-up"
-                          }),
-                          " 0% dari bulan lalu"
-                        ]
-                      )
-                    ]
-                  ),
+            {/* Pemasukan */}
+            <div className="stat-card">
+              <div className="stat-header">
+                <span className="stat-label">Pemasukan Bulan Ini</span>
+                <div className="stat-icon green">
+                  <i className="fas fa-arrow-down"></i>
+                </div>
+              </div>
+              <div className="stat-value">{formatRupiah(stats.monthlyIncome)}</div>
+            </div>
 
-                  // Pengeluaran
-                  React.createElement(
-                    "div",
-                    { key: "expense", className: "stat-card" },
-                    [
-                      React.createElement(
-                        "div",
-                        { key: "header", className: "stat-header" },
-                        [
-                          React.createElement(
-                            "span",
-                            { key: "label", className: "stat-label" },
-                            "Pengeluaran Bulan Ini"
-                          ),
-                          React.createElement(
-                            "div",
-                            { key: "icon", className: "stat-icon red" },
-                            React.createElement("i", { className: "fas fa-arrow-up" })
-                          )
-                        ]
-                      ),
-                      React.createElement(
-                        "div",
-                        { key: "value", className: "stat-value" },
-                        formatRupiah(stats.monthlyExpense)
-                      ),
-                      React.createElement(
-                        "div",
-                        { key: "change", className: "stat-change negative" },
-                        [
-                          React.createElement("i", {
-                            key: "arrow",
-                            className: "fas fa-arrow-up"
-                          }),
-                          " 0% dari bulan lalu"
-                        ]
-                      )
-                    ]
-                  )
-                ]
-              ),
+            {/* Pengeluaran */}
+            <div className="stat-card">
+              <div className="stat-header">
+                <span className="stat-label">Pengeluaran Bulan Ini</span>
+                <div className="stat-icon red">
+                  <i className="fas fa-arrow-up"></i>
+                </div>
+              </div>
+              <div className="stat-value">{formatRupiah(stats.monthlyExpense)}</div>
+            </div>
+          </div>
 
-              // Grafik & Tagihan
-              React.createElement(
-                "div",
-                { key: "chart-section", className: "chart-section" },
-                [
-                  // Grafik
-                  React.createElement(
-                    "div",
-                    { key: "chart", className: "chart-card" },
-                    [
-                      React.createElement(
-                        "div",
-                        { key: "header", className: "chart-header" },
-                        [
-                          React.createElement(
-                            "h3",
-                            { key: "title" },
-                            "Grafik Pengeluaran & Pemasukan"
-                          ),
-                          React.createElement(
-                            "select",
-                            { key: "filter", className: "chart-filter" },
-                            [
-                              React.createElement(
-                                "option",
-                                { key: "7d", value: "7" },
-                                "7 Hari Terakhir"
-                              ),
-                              React.createElement(
-                                "option",
-                                { key: "30d", value: "30" },
-                                "30 Hari Terakhir"
-                              )
-                            ]
-                          )
-                        ]
-                      ),
-                      React.createElement(
-                        "div",
-                        { key: "chart-area", className: "chart-placeholder" },
-                        "Grafik akan muncul di sini"
-                      )
-                    ]
-                  ),
-
-                  // Tagihan Mendatang
-                  React.createElement(
-                    "div",
-                    { key: "bills", className: "bills-card" },
-                    [
-                      React.createElement(
-                        "div",
-                        { key: "header", className: "bills-header" },
-                        [
-                          React.createElement("h3", { key: "title" }, "Tagihan Mendatang"),
-                          React.createElement(
-                            "a",
-                            { key: "link", href: "#", className: "view-all" },
-                            "Lihat Semua"
-                          )
-                        ]
-                      ),
-                      React.createElement(
-                        "div",
-                        { key: "empty", className: "empty-state" },
-                        [
-                          React.createElement("i", {
-                            key: "icon",
-                            className: "fas fa-file-invoice"
-                          }),
-                          React.createElement("p", { key: "text" }, "Belum ada tagihan berkala"),
-                          React.createElement(
-                            "button",
-                            { key: "btn", className: "add-btn" },
-                            "+ Tambah Tagihan"
-                          )
-                        ]
-                      )
-                    ]
-                  )
-                ]
-              ),
-
-              // Transaksi Terbaru
-              React.createElement(
-                "div",
-                { key: "transactions", className: "transactions-card" },
-                [
-                  React.createElement(
-                    "div",
-                    { key: "header", className: "transactions-header" },
-                    [
-                      React.createElement("h3", { key: "title" }, "Transaksi Terbaru"),
-                      React.createElement(
-                        Link,
-                        { key: "link", to: "/riwayat", className: "view-all" },
-                        "Lihat Semua"
-                      )
-                    ]
-                  ),
-                  React.createElement(
-                    "table",
-                    { key: "table", className: "transactions-table" },
-                    [
-                      React.createElement(
-                        "thead",
-                        { key: "thead" },
-                        React.createElement("tr", null, [
-                          React.createElement("th", { key: "desc" }, "DESKRIPSI"),
-                          React.createElement("th", { key: "cat" }, "KATEGORI"),
-                          React.createElement("th", { key: "date" }, "TANGGAL"),
-                          React.createElement("th", { key: "amount", className: "text-right" }, "JUMLAH")
-                        ])
-                      ),
-                      React.createElement(
-                        "tbody",
-                        { key: "tbody" },
-                        transactions.length === 0
-                          ? React.createElement(
-                              "tr",
-                              { key: "empty" },
-                              React.createElement(
-                                "td",
-                                { colSpan: "4", className: "empty-state" },
-                                [
-                                  React.createElement("i", {
-                                    key: "icon",
-                                    className: "fas fa-exchange-alt"
-                                  }),
-                                  React.createElement("p", { key: "text" }, "Belum ada transaksi"),
-                                  React.createElement(
-                                    Link,
-                                    { key: "link", to: "/transaksi", className: "add-btn" },
-                                    "+ Tambah Transaksi"
-                                  )
-                                ]
-                              )
-                            )
-                          : transactions.slice(0, 5).map((tx, idx) =>
-                              React.createElement("tr", { key: idx }, [
-                                React.createElement("td", { key: "desc" }, tx.deskripsi),
-                                React.createElement("td", { key: "cat" }, tx.kategori),
-                                React.createElement(
-                                  "td",
-                                  { key: "date" },
-                                  new Date(tx.tanggal).toLocaleDateString("id-ID")
-                                ),
-                                React.createElement(
-                                  "td",
-                                  {
-                                    key: "amount",
-                                    className: `text-right ${
-                                      tx.jenis === "pemasukan" ? "positive" : "negative"
-                                    }`
-                                  },
-                                  `${tx.jenis === "pemasukan" ? "+" : "-"} ${formatRupiah(tx.jumlah)}`
-                                )
-                              ])
-                            )
-                      )
-                    ]
-                  )
-                ]
-              )
-            ]
-          )
-        ]
-      )
-    ]
+          {/* Transaksi Terbaru */}
+          <div className="transactions-card">
+            <div className="transactions-header">
+              <h3>Transaksi Terbaru</h3>
+              <Link to="/transaksi" className="view-all">Tambah Transaksi</Link>
+            </div>
+            <table className="transactions-table">
+              <thead>
+                <tr>
+                  <th>DESKRIPSI</th>
+                  <th>KATEGORI</th>
+                  <th>TANGGAL</th>
+                  <th className="text-right">JUMLAH</th>
+                </tr>
+              </thead>
+              <tbody>
+                {transactions.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="empty-state">
+                      <i className="fas fa-exchange-alt"></i>
+                      <p>Belum ada transaksi</p>
+                      <Link to="/transaksi" className="add-btn">
+                        + Tambah Transaksi
+                      </Link>
+                    </td>
+                  </tr>
+                ) : (
+                  transactions.slice(0, 5).map((tx, idx) => (
+                    <tr key={idx}>
+                      <td>{tx.deskripsi}</td>
+                      <td>{tx.kategori}</td>
+                      <td>{new Date(tx.tanggal).toLocaleDateString("id-ID")}</td>
+                      <td
+                        className={`text-right ${
+                          tx.jenis === "pemasukan" ? "positive" : "negative"
+                        }`}
+                      >
+                        {tx.jenis === "pemasukan" ? "+" : "-"} {formatRupiah(tx.jumlah)}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
