@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // ✅ tambahan
+import { useNavigate } from 'react-router-dom';
 import '../styles/landing.css';
 
 function Landing() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const navigate = useNavigate(); // ✅ tambahan
+  const navigate = useNavigate();
 
-  // ✅ fungsi scroll ke section
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
     if (section) {
@@ -20,7 +19,9 @@ function Landing() {
       React.createElement('div', { className: 'nav-container' },
         React.createElement('div', { className: 'nav-content' },
           React.createElement('div', { className: 'logo-section' },
-            React.createElement('div', { className: 'logo-icon' }, '💰'),
+            React.createElement('div', { className: 'logo-icon' },
+              React.createElement('i', { className: 'fas fa-folder' })
+            ),
             React.createElement('span', { className: 'logo-text' }, 'KeuanganKu')
           ),
           
@@ -205,14 +206,15 @@ function Landing() {
       )
     ),
 
-
     // Footer
     React.createElement('footer', { className: 'footer' },
       React.createElement('div', { className: 'footer-container' },
         React.createElement('div', { className: 'footer-grid' },
           React.createElement('div', { className: 'footer-col' },
             React.createElement('div', { className: 'footer-logo' },
-              React.createElement('div', { className: 'footer-logo-icon' }, '💰'),
+              React.createElement('div', { className: 'footer-logo-icon' },
+                React.createElement('i', { className: 'fas fa-folder' })
+              ),
               React.createElement('span', { className: 'footer-logo-text' }, 'KeuanganKu')
             ),
             React.createElement('p', { className: 'footer-desc' }, 
