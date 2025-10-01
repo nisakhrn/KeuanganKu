@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import "../styles/login.css";
 
 export default function Login() {
@@ -18,25 +18,28 @@ export default function Login() {
     });
   };
 
-  // 🔹 FIX: cek user dari localStorage, bukan fetch server
   const handleSubmit = (e) => {
     e.preventDefault();
 
     setErrors({});
     setSuccess("");
 
+    // Ambil daftar semua user dari localStorage
     const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // Cari user yang email dan password-nya cocok
     const user = users.find(
       (u) => u.email === formData.email && u.password === formData.password
     );
 
     if (user) {
-      // simpan user yang login sekarang
+      // Jika user ditemukan, simpan infonya dan pindah ke dashboard
       localStorage.setItem("currentUser", JSON.stringify(user));
       setSuccess("Login berhasil!");
       setErrors({});
-      window.location.href = "/dashboard"; // pindah ke dashboard
+      window.location.href = "/dashboard";
     } else {
+      // Jika user tidak ditemukan, tampilkan error
       setErrors({ general: "Email atau password salah" });
     }
   };
