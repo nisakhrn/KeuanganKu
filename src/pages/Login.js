@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "../styles/login.css"; // pastikan path sesuai
+import { Link } from "react-router-dom"; 
+import "../styles/login.css";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -17,115 +18,137 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  // 🔹 FIX: cek user dari localStorage, bukan fetch server
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // penting kalau backend pakai session/cookie
-        body: JSON.stringify(formData),
-      });
+    setErrors({});
+    setSuccess("");
 
-      if (response.ok) {
-        const data = await response.json();
-        setSuccess("Login berhasil!");
-        setErrors({});
-        // Simpan token / data user kalau backend kasih JWT atau session
-        localStorage.setItem("token", data.token || "");
-        localStorage.setItem("user", JSON.stringify(data.user || {}));
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const user = users.find(
+      (u) => u.email === formData.email && u.password === formData.password
+    );
 
-        // redirect ke dashboard misalnya
-        window.location.href = "/dashboard";
-      } else {
-        const data = await response.json();
-        setErrors(data.errors || { general: "Email atau password salah" });
-      }
-    } catch (err) {
-      setErrors({ general: "Gagal terhubung ke server" });
+    if (user) {
+      // simpan user yang login sekarang
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      setSuccess("Login berhasil!");
+      setErrors({});
+      window.location.href = "/dashboard"; // pindah ke dashboard
+    } else {
+      setErrors({ general: "Email atau password salah" });
     }
   };
 
   return React.createElement(
     "div",
     { className: "login-wrapper" },
-    React.createElement(
-      "div",
-      { className: "login-card" },
-      [
-        React.createElement(
-          "h2",
-          { key: "title", className: "login-title" },
-          "Login"
-        ),
-        success &&
-          React.createElement(
-            "p",
-            { key: "success", className: "login-success" },
-            success
-          ),
-        errors.general &&
-          React.createElement(
-            "p",
-            { key: "errorGeneral", className: "login-error" },
-            errors.general
-          ),
-        React.createElement(
-          "form",
-          { key: "form", onSubmit: handleSubmit, className: "login-form" },
-          [
-            // Email
-            React.createElement("div", { key: "email", className: "form-group" }, [
-              React.createElement("input", {
-                type: "email",
-                name: "email",
-                placeholder: " ",
-                value: formData.email,
-                onChange: handleChange,
-                required: true,
-                className: "form-input",
-              }),
-              React.createElement("label", { className: "form-label" }, "Email"),
-              errors.email &&
-                React.createElement(
-                  "p",
-                  { className: "login-error" },
-                  errors.email
-                ),
-            ]),
+    [
+      // 🔙 Panah kembali ke Landing (di luar card, pojok kiri layar)
+      React.createElement(
+        Link,
+        { key: "backToLanding", to: "/", className: "back-arrow" },
+        "⟵"
+      ),
 
-            // Password
-            React.createElement("div", { key: "password", className: "form-group" }, [
-              React.createElement("input", {
-                type: "password",
-                name: "password",
-                placeholder: " ",
-                value: formData.password,
-                onChange: handleChange,
-                required: true,
-                className: "form-input",
-              }),
-              React.createElement("label", { className: "form-label" }, "Password"),
-              errors.password &&
-                React.createElement(
-                  "p",
-                  { className: "login-error" },
-                  errors.password
-                ),
-            ]),
+      // Card
+      React.createElement(
+        "div",
+        { className: "login-card" },
+        [
+          // Title
+          React.createElement(
+            "h2",
+            { key: "title", className: "login-title" },
+            "Login"
+          ),
 
-            // Submit Button
+          // Success
+          success &&
             React.createElement(
-              "button",
-              { key: "submit", type: "submit", className: "btn-login" },
-              "Login"
+              "p",
+              { key: "success", className: "login-success" },
+              success
             ),
-          ]
-        ),
-      ]
-    )
+
+          // Error umum
+          errors.general &&
+            React.createElement(
+              "p",
+              { key: "errorGeneral", className: "login-error" },
+              errors.general
+            ),
+
+          // Form
+          React.createElement(
+            "form",
+            { key: "form", onSubmit: handleSubmit, className: "login-form" },
+            [
+              // Email
+              React.createElement("div", { key: "email", className: "form-group" }, [
+                React.createElement("input", {
+                  type: "email",
+                  name: "email",
+                  placeholder: " ",
+                  value: formData.email,
+                  onChange: handleChange,
+                  required: true,
+                  className: "form-input",
+                }),
+                React.createElement("label", { className: "form-label" }, "Email"),
+                errors.email &&
+                  React.createElement(
+                    "p",
+                    { className: "login-error" },
+                    errors.email
+                  ),
+              ]),
+
+              // Password
+              React.createElement("div", { key: "password", className: "form-group" }, [
+                React.createElement("input", {
+                  type: "password",
+                  name: "password",
+                  placeholder: " ",
+                  value: formData.password,
+                  onChange: handleChange,
+                  required: true,
+                  className: "form-input",
+                }),
+                React.createElement("label", { className: "form-label" }, "Password"),
+                errors.password &&
+                  React.createElement(
+                    "p",
+                    { className: "login-error" },
+                    errors.password
+                  ),
+              ]),
+
+              // Tombol submit
+              React.createElement(
+                "button",
+                { key: "submit", type: "submit", className: "btn-login" },
+                "Login"
+              ),
+
+              // Link ke Register
+              React.createElement(
+                "p",
+                { key: "registerText", className: "login-register" },
+                [
+                  "Belum punya akun? ",
+                  React.createElement(
+                    Link,
+                    { to: "/register", key: "registerLink", className: "register-link" },
+                    "Register"
+                  )
+                ]
+              )
+            ]
+          )
+        ]
+      )
+    ]
   );
 }
