@@ -18,33 +18,26 @@ export default function Login() {
     });
   };
 
-  // Perhatikan penambahan "async" di sini
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
+    // Ambil daftar semua user dari localStorage
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-      if (response.ok) {
-        const data = await response.json();
-        setSuccess("Login berhasil!");
-        setErrors({});
-        localStorage.setItem("token", data.token || "");
-        localStorage.setItem("user", JSON.stringify(data.user || {}));
-        window.location.href = "/dashboard";
-      } else {
-        const data = await response.json();
-        setErrors(data.errors || { general: "Email atau password salah" });
-      }
-    } catch (err) {
-      setErrors({ general: "Gagal terhubung ke server" });
+    // Cari user yang email dan password-nya cocok
+    const user = users.find(
+      (u) => u.email === formData.email && u.password === formData.password
+    );
+
+    if (user) {
+      // Jika user ditemukan, simpan infonya dan pindah ke dashboard
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      setSuccess("Login berhasil!");
+      setErrors({});
+      window.location.href = "/dashboard";
+    } else {
+      // Jika user tidak ditemukan, tampilkan error
+      setErrors({ general: "Email atau password salah" });
     }
   };
 
