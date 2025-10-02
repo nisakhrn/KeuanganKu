@@ -30,7 +30,7 @@ function Landing() {
             React.createElement('button', { className: 'nav-link', onClick: () => scrollToSection('features') }, 'Fitur'),
             React.createElement('button', { className: 'nav-link', onClick: () => scrollToSection('benefits') }, 'Keuntungan'),
             React.createElement('button', { className: 'btn-login', onClick: () => navigate('/login') }, 'Masuk'),
-            React.createElement('button', { className: 'btn-register', onClick: () => navigate('/register') }, 'Daftar Gratis')
+            React.createElement('button', { className: 'btn-register', onClick: () => navigate('/register') }, 'Daftar')
           ),
 
           // Mobile Menu Button
@@ -46,7 +46,7 @@ function Landing() {
           React.createElement('button', { className: 'mobile-link', onClick: () => scrollToSection('benefits') }, 'Keuntungan'),
           React.createElement('button', { className: 'mobile-link', onClick: () => scrollToSection('about') }, 'Tentang'),
           React.createElement('button', { className: 'mobile-btn-login', onClick: () => navigate('/login') }, 'Masuk'),
-          React.createElement('button', { className: 'mobile-btn-register', onClick: () => navigate('/register') }, 'Daftar Gratis')
+          React.createElement('button', { className: 'mobile-btn-register', onClick: () => navigate('/register') }, 'Daftar')
         )
       )
     ),
@@ -92,11 +92,11 @@ function Landing() {
               React.createElement('div', { className: 'card-stats' },
                 React.createElement('div', { className: 'stat-box stat-income' },
                   React.createElement('div', { className: 'stat-box-label' }, 'Pemasukan'),
-                  React.createElement('div', { className: 'stat-box-value' }, 'Rp 8.5M')
+                  React.createElement('div', { className: 'stat-box-value' }, 'Rp 8.500.000')
                 ),
                 React.createElement('div', { className: 'stat-box stat-expense' },
                   React.createElement('div', { className: 'stat-box-label' }, 'Pengeluaran'),
-                  React.createElement('div', { className: 'stat-box-value' }, 'Rp 3.2M')
+                  React.createElement('div', { className: 'stat-box-value' }, 'Rp 3.200.000')
                 )
               )
             )
@@ -116,9 +116,9 @@ function Landing() {
         React.createElement('div', { className: 'features-grid' },
           React.createElement('div', { className: 'feature-card' },
             React.createElement('div', { className: 'feature-icon' }, '📊'),
-            React.createElement('h3', { className: 'feature-title' }, 'Grafik Keuangan'),
+            React.createElement('h3', { className: 'feature-title' }, 'Dashboard Keuangan'),
             React.createElement('p', { className: 'feature-desc' }, 
-              'Visualisasi pemasukan dan pengeluaran Anda dalam bentuk grafik yang mudah dipahami.'
+              'Kelola kondisi finansial Anda dengan mudah melalui tampilan ringkas yang menampilkan saldo, pemasukan, pengeluaran, dan grafik keuangan secara real-time'
             )
           ),
 
