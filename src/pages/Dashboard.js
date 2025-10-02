@@ -80,14 +80,18 @@ export default function Dashboard() {
               <i className="fas fa-bell"></i>
               <span className="notification-badge"></span>
             </span>
-            <span className="user-name">{currentUser.name}</span>
+
+            <Link to="/profil" className="user-name-link">
+              <span className="user-name">{currentUser.name}</span>
+            </Link>
+
             <button onClick={handleLogout} className="logout-btn" title="Keluar">
               <i className="fas fa-sign-out-alt"></i>
             </button>
           </div>
         </header>
 
-        {/* Content */}
+        {/* Dashboard Content */}
         <div className="dashboard-content">
           {/* Stats */}
           <div className="stats-grid">
@@ -157,11 +161,7 @@ export default function Dashboard() {
                       <td>{tx.deskripsi}</td>
                       <td>{tx.kategori}</td>
                       <td>{new Date(tx.tanggal).toLocaleDateString("id-ID")}</td>
-                      <td
-                        className={`text-right ${
-                          tx.jenis === "pemasukan" ? "positive" : "negative"
-                        }`}
-                      >
+                      <td className={`text-right ${tx.jenis === "pemasukan" ? "positive" : "negative"}`}>
                         {tx.jenis === "pemasukan" ? "+" : "-"} {formatRupiah(tx.jumlah)}
                       </td>
                     </tr>

@@ -1,18 +1,18 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import "../styles/sidebar.css"; // Pastikan Anda memiliki file CSS untuk sidebar
+import "../styles/sidebar.css"; // Pastikan file CSS ini ada
 
 export default function Sidebar() {
   const location = useLocation();
 
-  // Konfigurasi menu, mudah untuk ditambah atau diubah
+  // Menambahkan menu Profil di sini
   const menuItems = [
     { path: "/dashboard", icon: "fas fa-home", label: "Dashboard" },
     { path: "/transaksi", icon: "fas fa-exchange-alt", label: "Transaksi" },
     { path: "/riwayat", icon: "fas fa-history", label: "Riwayat Transaksi" },
-  ];
+    { path: "/profil", icon: "fas fa-user-circle", label: "Profil" }, 
+    ];
 
-  // Fungsi untuk handle logout
   const handleLogout = () => {
     localStorage.removeItem("currentUser");
     window.location.href = "/login";
@@ -33,7 +33,6 @@ export default function Sidebar() {
             <li key={item.path}>
               <Link
                 to={item.path}
-                // Menambahkan class 'active' jika path saat ini sama dengan path menu
                 className={`sidebar-link ${
                   location.pathname === item.path ? "active" : ""
                 }`}

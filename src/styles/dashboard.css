@@ -116,7 +116,7 @@ body {
 
 .dashboard-title {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 700;
   color: #1a202c;
 }
 
@@ -420,4 +420,16 @@ body {
   .stats-grid {
     grid-template-columns: 1fr;
   }
+  /* Tambahkan ini di akhir file dashboard.css */
+
+.user-name-link {
+  text-decoration: none; /* Menghilangkan garis bawah */
+  color: inherit; /* Mengambil warna dari parent */
+  transition: color 0.2s;
+}
+
+.user-name-link:hover .user-name {
+  color: #6c63ff; /* Warna saat cursor di atas nama */
+}
+
 }
